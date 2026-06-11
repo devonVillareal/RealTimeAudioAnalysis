@@ -5,6 +5,7 @@ import queue
 import math
 
 #Clean up current code and make unified global variables, then implement controls to change them realtime as the app is running
+#Testing the repository
 
 # GLOBAL VARIABLES 
 processed_audio = queue.Queue(maxsize=0) 
