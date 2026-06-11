@@ -54,7 +54,7 @@ prev_rms, prev_bass, prev_treble, prev_peaks = 0, 10, 10, {}
 prevbass_flux, prevtreble_flux, prevmid_flux = 0.0,0.0,0.0 #Measures when things such as bass or treble pop
 
 #Smoothing
-bg_fade_value = 1.0
+bg_fade_value = 0.0
 
 
 class Dot: 
