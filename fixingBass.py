@@ -5,7 +5,7 @@ import queue
 import math
 
 #Clean up current code and make unified global variables, then implement controls to change them realtime as the app is running
-#Testing the repository
+
 
 # GLOBAL VARIABLES 
 processed_audio = queue.Queue(maxsize=0) 
@@ -54,7 +54,7 @@ prev_rms, prev_bass, prev_treble, prev_peaks = 0, 10, 10, {}
 prevbass_flux, prevtreble_flux, prevmid_flux = 0.0,0.0,0.0 #Measures when things such as bass or treble pop
 
 #Smoothing
-bg_fade_value = 0.0
+bg_fade_value = 1.0
 
 
 class Dot: 
