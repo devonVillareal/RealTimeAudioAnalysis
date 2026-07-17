@@ -5,7 +5,7 @@ A real-time digital signal processing (DSP) application designed to capture, ana
 ## Features
 *   **Live Stream Capture:** Low-latency audio ingestion from primary input devices.
 *   **Fast Fourier Transform (FFT):** Real-time frequency domain conversion for spectrum analysis and musical note calculation.
-*   **Visualizations:** Dynamic composit visuals based off of loudest musical notes in the input.
+*   **Visualizations:** Dynamic composit visuals based off of computed musical notes in the input.
 
 ## Tech Stack & Libraries
 *   **Core Logic:** Python
@@ -14,7 +14,7 @@ A real-time digital signal processing (DSP) application designed to capture, ana
 
 ## 📋 Prerequisites
 Before running this project, ensure you have the following installed on your machine:
-*   [e.g., Python 3.10+ / Node.js 18+]
+*   Python 3.13.3 or higher 
 *   A working microphone or system audio input device.
 
 ## ⚙️ Installation & Setup
@@ -41,6 +41,3 @@ To launch the real-time analyzer, execute the main script:
 2.  **Windowing Function:** Applies a Hanning/Hamming window to prevent spectral leakage.
 3.  **FFT Processing:** Computes the magnitude spectrum to extract frequency bins.
 4.  **Render Thread:** Decouples audio processing from the UI thread to prevent visual stuttering.
-
-## 🤝 Contributing
-Contributions, issues, and feature requests are welcome! Feel free to check the issues page if you want to contribute.
