@@ -1,6 +1,8 @@
 # Real-Time Audio Analysis Toool
 
-A real-time digital signal processing (DSP) application designed to capture, analyze, and visualize live audio input with low latency.
+A real-time digital signal processing (DSP) application that takes live audio input and trasforms it into particle based animations. The project analyzes bass, mid and treble frequencies in real time, detects musical notes, and uses this information to generates parameterized geometric shapes that react fluidly to the audio being played.
+
+
 
 ## Features
 *   **Live Stream Capture:** Low-latency audio ingestion from primary input devices.
@@ -36,8 +38,7 @@ To launch the real-time analyzer, execute the main script:
 python3 visualizer.py
 ```
 
-## 🛠️ Architecture & How It Works
-1.  **Audio Buffer:** Captures raw pulse-code modulation (PCM) data in small chunk sizes to minimize delay.
-2.  **Windowing Function:** Applies a Hanning/Hamming window to prevent spectral leakage.
-3.  **FFT Processing:** Computes the magnitude spectrum to extract frequency bins.
-4.  **Render Thread:** Decouples audio processing from the UI thread to prevent visual stuttering.
+## Architecture & How It Works
+1.  **Audio Buffer:** Captures raw audio data in small chunk sizes to minimize delay.
+2.  **FFT Processing:** Computes the magnitude spectrum to extract frequency bins.
+3.  **Render Thread:** Decouples audio processing from the UI thread to prevent visual stuttering.
