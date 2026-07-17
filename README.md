@@ -33,7 +33,7 @@ Before running this project, ensure you have the following installed on your mac
 ## Running the Application
 To launch the real-time analyzer, execute the main script:
 ```bash
-python3 
+python3 visualizer.py
 ```
 
 ## 🛠️ Architecture & How It Works
