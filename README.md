@@ -12,14 +12,14 @@ A real-time digital signal processing (DSP) application designed to capture, ana
 *   **Audio Handling:** Pyaudio/numpy
 *   **Visualization/GUI:** Pygame
 
-## 📋 Prerequisites
+## Prerequisites
 Before running this project, ensure you have the following installed on your machine:
-*   Python 3.13.3 or higher 
+*   Python 3.8 or higher 
 *   A working microphone or system audio input device.
 
-## ⚙️ Installation & Setup
+## Installation & Setup
 
-1. Clone the repository using your configured SSH key:
+1. Clone the repository:
    ```bash
    git clone git@github-work:devonVillareal/RealTimeAudioAnalysis.git
    cd RealTimeAudioAnalysis
@@ -27,13 +27,13 @@ Before running this project, ensure you have the following installed on your mac
 
 2. Install the required dependencies:
    ```bash
-   # Add your installation command here (e.g., pip install -r requirements.txt)
+   pip install -r requirements.txt
    ```
 
-## 🏃 Running the Application
+## Running the Application
 To launch the real-time analyzer, execute the main script:
 ```bash
-# Add your execution command here (e.g., python main.py)
+python3 
 ```
 
 ## 🛠️ Architecture & How It Works
