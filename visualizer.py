@@ -18,7 +18,7 @@ Y_var = 10
 X_var_1 = 3
 Y_var_1 = 3
 bass_dampener = 0.1 #Controls how much bass is dampered out of the callback
-treble_dampener = 1 #Controls how much treble is dampered out of the callback
+treble_dampener = 0.1 #Controls how much treble is dampered out of the callback
 bass_max,treble_max,mid_max = 1.0,1.0,1.0 #used in callback
 
 
@@ -66,9 +66,12 @@ class Dot:
         self.size = 2.2
         self.pulse_offset = index * 0.1 
 
-    def changeSpeed(self, gravity_x, gravity_y, screen, rms, color):
-        x_diff = (gravity_x - self.x)
-        y_diff = (gravity_y - self.y)
+
+##MAKE A BETTER PARTICLE PHYSICS SYSTEM: MIRRORING A SPRING
+    def changeSpeed(self, target_x, target_y, screen, rms, color):
+        x_diff = (target_x - self.x)
+        y_diff = (target_y - self.y)
+
         scale_factor_move = 6.324 / (np.sqrt(2) * WIDTH)
         strength = (np.sqrt((x_diff**2) + (y_diff**2))) 
         if strength > 1:
@@ -77,7 +80,7 @@ class Dot:
             self.x += self.vx
             self.y += self.vy
         else:
-            self.x, self.y = gravity_x, gravity_y
+            self.x, self.y = target_x, target_y
         self.draw(screen, rms, color)
 
     def draw(self, screen, rms, color): 
@@ -96,16 +99,6 @@ class Dot:
         screen.blit(glow_surface, (int(self.x) - glow_radius, int(self.y) - glow_radius))
         pygame.draw.circle(screen, color, (int(self.x), int(self.y)), int(self.size), width=0)
 
-class Gravity_Well: 
-    def __init__(self, x, y, Dot): 
-        self.center_x = x
-        self.center_y = y
-        self.Particle = Dot
-        
-    def update(self, new_x, new_y, screen, rms, color): 
-        self.center_x = new_x
-        self.center_y = new_y
-        self.Particle.changeSpeed(self.center_x, self.center_y, screen, rms, color)
 
 # --- PYGAME SETUP ---
 pygame.init()
@@ -156,38 +149,38 @@ def callback(in_data, frame_count, time_info, status):
 
 
     # Normalize arrays to a perfect 0.0 to 1.0 baseline
-    bassfft_boud   = bassfft_raw   / (bass_max + 1e-6)
-    midfft_boud    = midfft_raw    / (mid_max + 1e-6)
-    treblefft_boud = treblefft_raw / (treble_max + 1e-6)
+    bassfft_bound   = bassfft_raw   / (bass_max + 1e-6)
+    midfft_bound    = midfft_raw    / (mid_max + 1e-6)
+    treblefft_bound = treblefft_raw / (treble_max + 1e-6)
 
 
 
     #Do final calculationsm, ensuring they are prepared for no sound to be present
-    if len(bassfft_boud) > 0:
-        bassCanitadeBins = detectPeaks(bassfft_boud)
-        bassCanitadeBins.sort(key=lambda i: bassfft_boud[i], reverse=True) #Sort the peaks
-        final_bass = top_peaks(bassCanitadeBins,bassfft_boud,bassfreq_bound,num_peaks)
-        bass_flux = calculateFlux(bassfft_boud,prev_bassfft,prevbass_flux) if prev_bassfft is not None else 0.0
+    if len(bassfft_bound) > 0:
+        bassCanitadeBins = detectPeaks(bassfft_bound)
+        bassCanitadeBins.sort(key=lambda i: bassfft_bound[i], reverse=True) #Sort the peaks
+        final_bass = top_peaks(bassCanitadeBins,bassfft_bound,bassfreq_bound,num_peaks)
+        bass_flux = calculateFlux(bassfft_bound,prev_bassfft,prevbass_flux) if prev_bassfft is not None else 0.0
     else:
         final_bass = [(0.0,0.0)] * num_peaks
         bass_flux = 0.0
 
     
-    if len(treblefft_boud) > 0:
-        trebleCanidateBins = detectPeaks(treblefft_boud)
-        trebleCanidateBins.sort(key=lambda i: treblefft_boud[i], reverse=True) #Sort the peaks 
-        final_treble = top_peaks(trebleCanidateBins,treblefft_boud,treblefreq_bound,num_peaks)
-        treble_flux = calculateFlux(treblefft_boud,prevtreblefft, prevtreble_flux) if prevtreblefft is not None else 0.0
+    if len(treblefft_bound) > 0:
+        trebleCanidateBins = detectPeaks(treblefft_bound)
+        trebleCanidateBins.sort(key=lambda i: treblefft_bound[i], reverse=True) #Sort the peaks 
+        final_treble = top_peaks(trebleCanidateBins,treblefft_bound,treblefreq_bound,num_peaks)
+        treble_flux = calculateFlux(treblefft_bound,prevtreblefft, prevtreble_flux) if prevtreblefft is not None else 0.0
     else:
         final_treble = [(0.0,0.0)] * num_peaks
         treble_flux = 0.0
 
     
-    if len(midfft_boud) > 0:
-        midCanidateBins = detectPeaks(midfft_boud)
-        midCanidateBins.sort(key=lambda i: midfft_boud[i], reverse=True) #Sort the peaks 
-        final_mid = top_peaks(midCanidateBins,midfft_boud,midfreq_bound,num_peaks)
-        mid_flux = calculateFlux(midfft_boud,prevmidfft,prevmid_flux) if prevmidfft is not None else 0.0
+    if len(midfft_bound) > 0:
+        midCanidateBins = detectPeaks(midfft_bound)
+        midCanidateBins.sort(key=lambda i: midfft_bound[i], reverse=True) #Sort the peaks 
+        final_mid = top_peaks(midCanidateBins,midfft_bound,midfreq_bound,num_peaks)
+        mid_flux = calculateFlux(midfft_bound,prevmidfft,prevmid_flux) if prevmidfft is not None else 0.0
     else:
         final_mid = [(0.0,0.0)] * num_peaks
         mid_flux = 0.0
@@ -195,9 +188,9 @@ def callback(in_data, frame_count, time_info, status):
 
     
     #Update Memory
-    prev_bassfft = bassfft_boud
-    prevtreblefft = treblefft_boud
-    prevmidfft = midfft_boud
+    prev_bassfft = bassfft_bound
+    prevtreblefft = treblefft_bound
+    prevmidfft = midfft_bound
     prevbass_flux = bass_flux
     prevtreble_flux = treble_flux
     prevmid_flux = mid_flux
@@ -261,7 +254,7 @@ stream = p.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_
 stream.start_stream()
 
 running = True
-Gravity_Wells = [Gravity_Well(CENTER_X, CENTER_Y, Dot(CENTER_X, CENTER_Y, i)) for i in range(len(THETAS))] 
+Gravity_Wells = [(Dot(CENTER_X, CENTER_Y, i)) for i in range(len(THETAS))] 
 
 # --- SHAPE FUNCTIONS ---
 def spiral(theta): return (rmsadj*50*((1+X_var_1)*theta)*np.cos(X_var*theta),rmsadj*50*((1+Y_var_1)*theta)*np.sin(Y_var*theta))
@@ -362,7 +355,7 @@ try:
         bg_fade_value += (target_intensity - bg_fade_value) * 0.1 #Smooth out transitions
         final_bg = np.clip(background_color * bg_fade_value, 0, 255).astype(int) #Clamp final color to make sure it is within the color range
         
-        screen.fill(final_bg) #Fill Background
+        screen.fill((0,0,0)) #final_bg) #Fill Background
 
 
         for event in pygame.event.get():
@@ -385,18 +378,6 @@ try:
             shape_selector_1  = peak_note(peaks["mid"], 0)  # First peak, selects primary shape
             if shape_selector_1 == None:
                 shape_selector_1 = 12
-
-            # if canidate_shape_1 == current_shape_1:
-            #     shape_hold_counter_1 = 0
-            # else:
-            #     shape_hold_counter_1 += 1
-
-            #     if shape_hold_counter_1 >= MIN_HOLD_FRAMES:
-            #         current_shape_1 = canidate_shape_1
-            #         shape_hold_counter_1 = 0
-                
-            shape_selector_1 = current_shape_1
-
             color_selector = peak_note(peaks["treble"], 0) #Second Peak, selects color of the shape
             if color_selector == None: #If no second peak then keep previous color
                 color_selector = prev_color_selector  # 2nd
@@ -425,7 +406,6 @@ try:
         # Compact expansion logic
         
         shape_expansion = np.clip(1.0 + (bass * 0.6) + (treble * 0.8), 1.0, 3.0)   
-        print(treble_flux)
         w1 = 0.5 * bass_flux
         w2 = 1 - w1 
         
@@ -435,12 +415,10 @@ try:
 
             target_x = (tx * shape_expansion) + CENTER_X
             target_y = (ty * shape_expansion) + CENTER_Y
+        
+        
             
-            nx = (1 - effective_smooth) * Well.center_x + effective_smooth * target_x #smooth motion of the wells 
-            ny = (1 - effective_smooth) * Well.center_y + effective_smooth * target_y
-
-            
-            Well.update(nx, ny, screen, rms, tuple(color))
+            Well.changeSpeed(target_x, target_y, screen, rms, tuple(color))
 
         pygame.display.flip() 
 
