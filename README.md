@@ -2,7 +2,7 @@
 
 A real-time digital signal processing (DSP) application that takes live audio input and trasforms it into particle based animations. The project analyzes bass, mid and treble frequencies in real time, detects musical notes, and uses this information to generates parameterized geometric shapes that react fluidly to the audio being played.
 
-
+![DemonstrationOfMusicAnalysis](2026-07-20 13-31-26.gif)
 
 ## Features
 *   **Live Stream Capture:** Low-latency audio ingestion from primary input devices.
